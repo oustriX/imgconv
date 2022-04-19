@@ -1,3 +1,3 @@
-module imgconv
+module main
 
 go 1.18

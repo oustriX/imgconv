@@ -16,23 +16,35 @@ func main() {
 func imgconv() {
 
 	// checking for all arguments
-	if isTooShort(len(os.Args)) {
+	if len(os.Args) < 4 {
+		fmt.Println("You missed some arguments.")
+		fmt.Printf("Must be: 3. You sent: %d\n", len(os.Args)-1)
 		return
 	}
 
 	// open image file
-	f, isError := openFile(os.Args[1])
-	if isError {
+	f, err := os.Open(os.Args[1])
+	defer f.Close()
+	if err != nil {
+		fmt.Printf("cannot open file %s\n", os.Args[2])
+		fmt.Printf("error message: %s\n", err.Error())
 		return
 	}
 
-	img, isError := imageDecode(f)
-	if isError {
+	// decode original image
+	img, _, err := image.Decode(f)
+	if err != nil {
+		fmt.Printf("cannot decode file %s\n", os.Args[1])
+		fmt.Printf("error message: %s\n", err.Error())
 		return
 	}
 
-	newFile, isError := createNewFile(os.Args[3])
-	if isError {
+	// create file for new image
+	newFile, err := os.Create(os.Args[3])
+	defer newFile.Close()
+	if err != nil {
+		fmt.Printf("cannot create file %s\n", os.Args[3])
+		fmt.Printf("error message: %s\n", err.Error())
 		return
 	}
 
@@ -67,35 +79,6 @@ func imgconv() {
 
 }
 
-func isTooShort(length int) (isError bool) {
-	if length < 4 {
-		fmt.Println("You missed some arguments.")
-		fmt.Printf("Must be: 3. You sent: %d\n", length-1)
-		return true
-	}
-	return false
-}
-
-func openFile(path string) (f *os.File, isError bool) {
-	f, err := os.Open(path)
-	if err != nil {
-		fmt.Printf("cannot open file %s\n", path)
-		fmt.Printf("error message: %s\n", err.Error())
-		return f, true
-	}
-	return f, false
-}
-
-func imageDecode(f *os.File) (img image.Image, isError bool) {
-	img, _, err := image.Decode(f)
-	if err != nil {
-		fmt.Printf("cannot decode file %s\n", os.Args[1])
-		fmt.Printf("error message: %s\n", err.Error())
-		return img, true
-	}
-	return img, false
-}
-
 func convertToPNG(img image.Image, f *os.File) error {
 	err := png.Encode(f, img)
 	return err
@@ -115,16 +98,4 @@ func convertToJPEG(img image.Image, f *os.File) error {
 func convertError(err error) {
 	fmt.Println("fail to convert image")
 	fmt.Printf("error message: %d\n", err.Error())
-}
-
-// create file for new image
-func createNewFile(destination string) (newImageFile *os.File, isError bool) {
-	newFilePath := destination
-	newImageFile, err := os.Create(newFilePath)
-	if err != nil {
-		fmt.Printf("cannot create file %s\n", newFilePath)
-		fmt.Printf("error message: %s\n", err.Error())
-		return newImageFile, true
-	}
-	return newImageFile, false
 }
