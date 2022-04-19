@@ -25,12 +25,12 @@ func imgconv() {
 
 	// open image file
 	f, err := os.Open(os.Args[1])
-	defer f.Close()
 	if err != nil {
 		fmt.Printf("cannot open file %s\n", os.Args[2])
 		fmt.Printf("error message: %s\n", err.Error())
 		return
 	}
+	defer f.Close()
 
 	// decode original image
 	img, _, err := image.Decode(f)
@@ -42,12 +42,12 @@ func imgconv() {
 
 	// create file for new image
 	newFile, err := os.Create(os.Args[3])
-	defer newFile.Close()
 	if err != nil {
 		fmt.Printf("cannot create file %s\n", os.Args[3])
 		fmt.Printf("error message: %s\n", err.Error())
 		return
 	}
+	defer newFile.Close()
 
 	switch os.Args[2] {
 	case "-png":
