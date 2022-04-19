@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/kolesa-team/go-webp/encoder"
+	"github.com/kolesa-team/go-webp/webp"
 	"golang.org/x/image/bmp"
 	"golang.org/x/image/tiff"
 	"image"
@@ -86,6 +88,13 @@ func imgconv() {
 			return
 		}
 
+	case "webp":
+		err := convertToWEBP(img, newFile)
+		if err != nil {
+			convertError(err)
+			return
+		}
+
 	default:
 		fmt.Println("Imgconv can't convert image to this format(")
 		return
@@ -119,6 +128,12 @@ func convertToTIFF(img image.Image, f *os.File) error {
 
 func convertToBMP(img image.Image, f *os.File) error {
 	err := bmp.Encode(f, img)
+	return err
+}
+
+func convertToWEBP(img image.Image, f *os.File) error {
+	options := encoder.Options{}
+	err := webp.Encode(f, img, &options)
 	return err
 }
 
