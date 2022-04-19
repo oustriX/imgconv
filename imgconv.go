@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"golang.org/x/image/tiff"
 	"image"
 	"image/gif"
 	"image/jpeg"
@@ -70,6 +71,13 @@ func imgconv() {
 			return
 		}
 
+	case "-tiff":
+		err := convertToTIFF(img, newFile)
+		if err != nil {
+			convertError(err)
+			return
+		}
+
 	default:
 		fmt.Println("Imgconv can't convert image to this format(")
 		return
@@ -92,6 +100,12 @@ func convertToGIF(img image.Image, f *os.File) error {
 func convertToJPEG(img image.Image, f *os.File) error {
 	options := jpeg.Options{}
 	err := jpeg.Encode(f, img, &options)
+	return err
+}
+
+func convertToTIFF(img image.Image, f *os.File) error {
+	options := tiff.Options{}
+	err := tiff.Encode(f, img, &options)
 	return err
 }
 
