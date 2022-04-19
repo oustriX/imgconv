@@ -36,7 +36,7 @@ func imgconv() {
 	// decode original image
 	img, _, err := image.Decode(f)
 	if err != nil {
-		fmt.Printf("cannot decode file %s\n", os.Args[1])
+		fmt.Printf("unsupported format: %s\n", os.Args[1])
 		fmt.Printf("error message: %s\n", err.Error())
 		return
 	}
