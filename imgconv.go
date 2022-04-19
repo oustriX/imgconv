@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"golang.org/x/image/bmp"
 	"golang.org/x/image/tiff"
 	"image"
 	"image/gif"
@@ -78,6 +79,13 @@ func imgconv() {
 			return
 		}
 
+	case "-bmp":
+		err := convertToBMP(img, newFile)
+		if err != nil {
+			convertError(err)
+			return
+		}
+
 	default:
 		fmt.Println("Imgconv can't convert image to this format(")
 		return
@@ -106,6 +114,11 @@ func convertToJPEG(img image.Image, f *os.File) error {
 func convertToTIFF(img image.Image, f *os.File) error {
 	options := tiff.Options{}
 	err := tiff.Encode(f, img, &options)
+	return err
+}
+
+func convertToBMP(img image.Image, f *os.File) error {
+	err := bmp.Encode(f, img)
 	return err
 }
 
