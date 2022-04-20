@@ -56,29 +56,29 @@ func getSrcImageFormat(path string) string {
 	return format
 }
 
-// TODO: change default case
 func decodeImage(f *os.File, format string) (image.Image, error){
 	switch format {
 	case "png":
-		return DecodePNG(f)
+		return decodePNG(f)
 
 	case "jpeg", "jpg":
-		return DecodeJPEG(f)
+		return decodeJPEG(f)
 
 	case "gif":
-		return DecodeGIF(f)
+		return decodeGIF(f)
 
 	case "tiff":
-		return DecodeTIFF(f)
+		return decodeTIFF(f)
 
 	case "bmp":
-		return DecodeBMP(f)
+		return decodeBMP(f)
 
 	case "webp":
-		return DecodeWEBP(f)
+		return decodeWEBP(f)
 
 	default:
-		return nil, errors.New("unsupported format")
+		img, _, err := image.Decode(f)
+		return img, err
 	}
 }
 

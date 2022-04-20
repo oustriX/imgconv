@@ -11,26 +11,26 @@ import (
 	"os"
 )
 
-func DecodePNG(f *os.File) (image.Image, error) {
+func decodePNG(f *os.File) (image.Image, error) {
 	return png.Decode(f)
 }
 
-func DecodeJPEG(f *os.File) (image.Image, error) {
+func decodeJPEG(f *os.File) (image.Image, error) {
 	return jpeg.Decode(f)
 }
 
-func DecodeGIF(f *os.File) (image.Image, error) {
+func decodeGIF(f *os.File) (image.Image, error) {
 	return gif.Decode(f)
 }
 
-func DecodeTIFF(f *os.File) (image.Image, error) {
+func decodeTIFF(f *os.File) (image.Image, error) {
 	return tiff.Decode(f)
 }
 
-func DecodeBMP(f *os.File) (image.Image, error) {
+func decodeBMP(f *os.File) (image.Image, error) {
 	return bmp.Decode(f)
 }
 
-func DecodeWEBP(f *os.File) (image.Image, error) {
+func decodeWEBP(f *os.File) (image.Image, error) {
 	return webp.Decode(f)
 }
