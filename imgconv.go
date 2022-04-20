@@ -7,8 +7,6 @@ import (
 	"sort"
 )
 
-//var supportedFormats = []string{"png", "jpeg", "jpg"}
-
 func main() {
 	app := &cli.App{
 		Name:                  "imgconv",
