@@ -15,13 +15,13 @@ type ConvertingFile struct {
 }
 
 func ConvertImage(cmd *cli.Context) error {
-	args := cmd.Args()
-	srcImagePath := args.Get(1)
-	newFormat := args.Get(2)
-	newFilePath := args.Get(3)
+	srcImagePath := cmd.Args().Get(0)
+	newFormat := cmd.Args().Get(1)
+	newFilePath := cmd.Args().Get(2)
+	fmt.Println(srcImagePath, newFormat, newFilePath)
 
 	if newFilePath == "" {
-		newFilePath = "./newImage" + newFormat
+		newFilePath = "./newImage." + newFormat
 	}
 
 	srcImageFormat := getSrcImageFormat(srcImagePath)
@@ -31,6 +31,7 @@ func ConvertImage(cmd *cli.Context) error {
 		fmt.Printf("fail to open src file: %s\n", srcImagePath)
 		return err
 	}
+	defer f.Close()
 
 	img, err := decodeImage(f, srcImageFormat)
 	if err != nil {
@@ -44,6 +45,7 @@ func ConvertImage(cmd *cli.Context) error {
 		fmt.Printf("fail to create new file with path: %s\n", newFilePath)
 		return err
 	}
+	defer newFile.Close()
 
 	// encode old image to new file with new format
 	err = encodeImage(newFile, img, newFormat)
