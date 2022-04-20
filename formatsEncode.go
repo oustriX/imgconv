@@ -1,33 +1,34 @@
 package main
 
-import "github.com/urfave/cli/v2"
+import (
+	"golang.org/x/image/bmp"
+	"golang.org/x/image/tiff"
+	"image/gif"
+	"image/jpeg"
+	"image/png"
+)
 
-func EncodePNG(c *cli.Context) error {
 
-	return nil
+func encodePNG(cf ConvertingFile) error {
+	return png.Encode(cf.f, cf.img)
 }
 
-func EncodeJPEG(c *cli.Context) error {
-
-	return nil
+func encodeJPEG(cf ConvertingFile) error {
+	return jpeg.Encode(cf.f, cf.img, &jpeg.Options{})
 }
 
-func EncodeJPG(c *cli.Context) error {
-
-	return nil
+func encodeGIF(cf ConvertingFile) error {
+	return gif.Encode(cf.f, cf.img, &gif.Options{})
 }
 
-func EncodeTIFF(c *cli.Context) error {
-
-	return nil
+func encodeTIFF(cf ConvertingFile) error {
+	return tiff.Encode(cf.f, cf.img, &tiff.Options{})
 }
 
-func EncodeBMP(c *cli.Context) error {
-
-	return nil
+func encodeBMP(cf ConvertingFile) error {
+	return bmp.Encode(cf.f, cf.img)
 }
 
-func EncodeWEBP(c *cli.Context) error {
-
-	return nil
+func encodeWEBP(cf ConvertingFile) error {
+	return bmp.Encode(cf.f, cf.img)
 }

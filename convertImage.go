@@ -8,6 +8,12 @@ import (
 	"strings"
 )
 
+type ConvertingFile struct {
+	img image.Image
+	f *os.File
+}
+
+
 func ConvertImage(cmd *cli.Context) error {
 	args := cmd.Args()
 	srcImagePath := args.Get(1)
@@ -30,6 +36,17 @@ func ConvertImage(cmd *cli.Context) error {
 		return err
 	}
 
+	// create file for image with new format
+	newFile, err := os.Create(newFilePath)
+	if err != nil {
+		return err
+	}
+
+	// encode old image to new file with new format
+	err = encodeImage(newFile, img, newFormat)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -39,6 +56,7 @@ func getSrcImageFormat(path string) string {
 	return format
 }
 
+// TODO: change default case
 func decodeImage(f *os.File, format string) (image.Image, error){
 	switch format {
 	case "png":
@@ -61,5 +79,31 @@ func decodeImage(f *os.File, format string) (image.Image, error){
 
 	default:
 		return nil, errors.New("unsupported format")
+	}
+}
+
+func encodeImage(f *os.File, img image.Image, newFormat string) error {
+	cf := ConvertingFile{f: f, img: img}
+	switch newFormat {
+	case "png":
+		return encodePNG(cf)
+
+	case "jpeg", "jpg":
+		return encodeJPEG(cf)
+
+	case "gif":
+		return encodeGIF(cf)
+
+	case "tiff":
+		return encodeTIFF(cf)
+
+	case "bmp":
+		return encodeBMP(cf)
+
+	case "webp":
+		return encodeWEBP(cf)
+
+	default:
+		return errors.New("unsupported conversion format")
 	}
 }
