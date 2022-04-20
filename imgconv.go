@@ -35,7 +35,7 @@ func main() {
 				Name: "destination",
 				Aliases: []string{"dst", "d"},
 				Usage: "[required] `PATH` for save image with new format",
-				DefaultText: "./newImage",
+				DefaultText: "./newImage.[format]",
 			},
 		},
 	}
