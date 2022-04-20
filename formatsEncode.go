@@ -8,7 +8,6 @@ import (
 	"image/png"
 )
 
-
 func encodePNG(cf ConvertingFile) error {
 	return png.Encode(cf.f, cf.img)
 }

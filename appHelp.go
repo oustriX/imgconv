@@ -1,7 +1,6 @@
 package main
 
-const appHelpTemplate =
-`NAME:
+const appHelpTemplate = `NAME:
 	{{.Name}} -  {{.Usage}}
 USAGE:
 	imgconv {{if .Commands}} command [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}
