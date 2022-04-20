@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/urfave/cli/v2"
 	"image"
 	"os"
@@ -10,9 +11,8 @@ import (
 
 type ConvertingFile struct {
 	img image.Image
-	f *os.File
+	f   *os.File
 }
-
 
 func ConvertImage(cmd *cli.Context) error {
 	args := cmd.Args()
@@ -28,23 +28,27 @@ func ConvertImage(cmd *cli.Context) error {
 
 	f, err := os.Open(srcImagePath)
 	if err != nil {
+		fmt.Printf("fail to open src file: %s\n", srcImagePath)
 		return err
 	}
 
 	img, err := decodeImage(f, srcImageFormat)
 	if err != nil {
+		fmt.Printf("fail to decode image\n")
 		return err
 	}
 
 	// create file for image with new format
 	newFile, err := os.Create(newFilePath)
 	if err != nil {
+		fmt.Printf("fail to create new file with path: %s\n", newFilePath)
 		return err
 	}
 
 	// encode old image to new file with new format
 	err = encodeImage(newFile, img, newFormat)
 	if err != nil {
+		fmt.Printf("fail to encode new image\n")
 		return err
 	}
 	return nil
@@ -52,11 +56,11 @@ func ConvertImage(cmd *cli.Context) error {
 
 func getSrcImageFormat(path string) string {
 	parts := strings.Split(path, ".")
-	format := parts[len(parts) - 1]
+	format := parts[len(parts)-1]
 	return format
 }
 
-func decodeImage(f *os.File, format string) (image.Image, error){
+func decodeImage(f *os.File, format string) (image.Image, error) {
 	switch format {
 	case "png":
 		return decodePNG(f)
