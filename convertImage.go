@@ -90,7 +90,7 @@ func decodeImage(f *os.File, format string) (image.Image, error) {
 
 func encodeImage(f *os.File, img image.Image, newFormat string) error {
 	cf := ConvertingFile{f: f, img: img}
-	switch newFormat {
+	switch strings.ToLower(newFormat) {
 	case "png":
 		return encodePNG(cf)
 
