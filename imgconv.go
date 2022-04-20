@@ -1,143 +1,49 @@
 package main
 
 import (
-	"fmt"
-	"github.com/kolesa-team/go-webp/encoder"
-	"github.com/kolesa-team/go-webp/webp"
-	"golang.org/x/image/bmp"
-	"golang.org/x/image/tiff"
-	"image"
-	"image/gif"
-	"image/jpeg"
-	"image/png"
+	"github.com/urfave/cli/v2"
+	"log"
 	"os"
+	"sort"
 )
 
+//var supportedFormats = []string{"png", "jpeg", "jpg"}
+
 func main() {
-	imgconv()
-}
+	app := &cli.App{
+		Name: "imgconv",
+		Usage: "simple image format converter",
+		Action: ConvertImage,
+		CustomAppHelpTemplate: appHelpTemplate,
+		EnableBashCompletion: true,
+		Version: "1.0.0",
+		Flags: []cli.Flag{
+			&cli.PathFlag{
+				Name: "src",
+				Aliases: []string{"s"},
+				Usage: "[required] the `ORIGINAL IMAGE` to be converted",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name: "format",
+				Aliases: []string{"f"},
+				Usage: "[required] `FORMAT` for the new file",
+				Required: true,
 
-func imgconv() {
-
-	// checking for all arguments
-	if len(os.Args) < 4 {
-		fmt.Println("You missed some arguments.")
-		fmt.Printf("Must be: 3. You sent: %d\n", len(os.Args)-1)
-		return
+			},
+			&cli.PathFlag{
+				Name: "destination",
+				Aliases: []string{"dst", "d"},
+				Usage: "[required] `PATH` for save image with new format",
+				DefaultText: "./newImage",
+			},
+		},
 	}
 
-	// open image file
-	f, err := os.Open(os.Args[1])
+	sort.Sort(cli.CommandsByName(app.Commands))
+
+	err := app.Run(os.Args)
 	if err != nil {
-		fmt.Printf("cannot open file %s\n", os.Args[2])
-		fmt.Printf("error message: %s\n", err.Error())
-		return
+		log.Fatal(err)
 	}
-	defer f.Close()
-
-	// decode original image
-	img, _, err := image.Decode(f)
-	if err != nil {
-		fmt.Printf("unsupported format: %s\n", os.Args[1])
-		fmt.Printf("error message: %s\n", err.Error())
-		return
-	}
-
-	// create file for new image
-	newFile, err := os.Create(os.Args[3])
-	if err != nil {
-		fmt.Printf("cannot create file %s\n", os.Args[3])
-		fmt.Printf("error message: %s\n", err.Error())
-		return
-	}
-	defer newFile.Close()
-
-	switch os.Args[2] {
-	case "-png":
-		err := convertToPNG(img, newFile)
-		if err != nil {
-			convertError(err)
-			return
-		}
-
-	case "-gif":
-		err := convertToGIF(img, newFile)
-		if err != nil {
-			convertError(err)
-			return
-		}
-
-	case "-jpeg":
-		err := convertToJPEG(img, newFile)
-		if err != nil {
-			convertError(err)
-			return
-		}
-
-	case "-tiff":
-		err := convertToTIFF(img, newFile)
-		if err != nil {
-			convertError(err)
-			return
-		}
-
-	case "-bmp":
-		err := convertToBMP(img, newFile)
-		if err != nil {
-			convertError(err)
-			return
-		}
-
-	case "webp":
-		err := convertToWEBP(img, newFile)
-		if err != nil {
-			convertError(err)
-			return
-		}
-
-	default:
-		fmt.Println("Imgconv can't convert image to this format(")
-		return
-	}
-
-	fmt.Println("Done!")
-
-}
-
-func convertToPNG(img image.Image, f *os.File) error {
-	err := png.Encode(f, img)
-	return err
-}
-
-func convertToGIF(img image.Image, f *os.File) error {
-	err := gif.Encode(f, img, &gif.Options{})
-	return err
-}
-
-func convertToJPEG(img image.Image, f *os.File) error {
-	options := jpeg.Options{}
-	err := jpeg.Encode(f, img, &options)
-	return err
-}
-
-func convertToTIFF(img image.Image, f *os.File) error {
-	options := tiff.Options{}
-	err := tiff.Encode(f, img, &options)
-	return err
-}
-
-func convertToBMP(img image.Image, f *os.File) error {
-	err := bmp.Encode(f, img)
-	return err
-}
-
-func convertToWEBP(img image.Image, f *os.File) error {
-	options := encoder.Options{}
-	err := webp.Encode(f, img, &options)
-	return err
-}
-
-func convertError(err error) {
-	fmt.Println("fail to convert image")
-	fmt.Printf("error message: %d\n", err.Error())
 }
