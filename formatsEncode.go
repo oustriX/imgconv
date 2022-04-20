@@ -16,3 +16,18 @@ func EncodeJPG(c *cli.Context) error {
 
 	return nil
 }
+
+func EncodeTIFF(c *cli.Context) error {
+
+	return nil
+}
+
+func EncodeBMP(c *cli.Context) error {
+
+	return nil
+}
+
+func EncodeWEBP(c *cli.Context) error {
+
+	return nil
+}

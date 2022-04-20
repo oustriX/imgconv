@@ -9,4 +9,7 @@ SUPPORTED FORMATS:
 	PNG (png)
 	JPEG (jpeg)
 	JPG (jpg)
+	TIFF (tiff)
+	BMP (bmp)
+	WEBP (webp)
 `
